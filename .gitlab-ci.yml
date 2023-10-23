@@ -58,7 +58,7 @@ deploy-docker-container:
     - docker:dind
   image: docker:dind
   dependencies:
-    - build-docker-image
+    - build-docker-image-&push
   script:
     - echo "Deploying the application"
     - docker run  -d hakpovi/spring-boot-app:v1 
