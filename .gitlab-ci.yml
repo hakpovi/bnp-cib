@@ -42,10 +42,14 @@ run-docker-container:
     - build-docker-image-&push
   script:
     - echo "Deploying the application"
-    - docker run  -d hakpovi/spring-boot-backend:v1 
+    - docker run  -d hakpovi/spring-boot-backend:v1
+    - curl -vvv http://localhost:8090 > curl-result.txt
+    - cat curl-result.txt
     
   #only:
    # - master
   #only: [] 
+
+
 
 
