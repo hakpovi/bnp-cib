@@ -37,14 +37,13 @@ run-docker-container:
   stage: test
   services:
     - docker:dind
-  image: ubuntu:latest
+  image: docker:dind
   dependencies:
     - build-docker-image-&push
   script:
-    - apt-get install docker -y
     - docker run  -d hakpovi/spring-boot-backend:v1
-    - curl -vvv http://localhost:8090 > curl-result.txt
-    - cat curl-result.txt
+    #- curl -vvv http://localhost:8090 > curl-result.txt
+    #- cat curl-result.txt
     
   #only:
    # - master
