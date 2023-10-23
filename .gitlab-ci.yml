@@ -37,7 +37,7 @@ run-docker-container:
   stage: test
   services:
     - docker:dind
-  image: ubuntu:20-alpine
+  image: ubuntu
   dependencies:
     - build-docker-image-&push
   script:
