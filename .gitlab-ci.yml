@@ -1,14 +1,10 @@
 image: maven:3.8-jdk-11
-variables:
-  DOCKER_REGISTRY: "bnp"
-  DOCKER_USERNAME: "hakpovi"
-  DOCKER_PASSWORD: "dckr_pat_CtmbwZVUC4FPDWWgS6M86e-N0gI"
 
 services:
   - docker:dind
+
 stages:
   - build
-
   - deploy
   - test
 
@@ -22,8 +18,6 @@ build-jar-file:
         paths:
             -  target/*.jar
 
-
-
 build-docker-image-&push:
   services:
     - docker:dind
@@ -34,12 +28,10 @@ build-docker-image-&push:
     
   script:
     
-    - docker build -t spring-boot-backend:v1 .  #   Build the Docker image
-    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD # CI_REGISTRY
-    - docker tag spring-boot-backend:v1 hakpovi/spring-boot-backend:v1 # Tag the Docker image
-    
-    - docker push hakpovi/spring-boot-backend:v1
-    
+    - docker build -t spring-boot-backend:v1 .  
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD 
+    - docker tag spring-boot-backend:v1 hakpovi/spring-boot-backend:v1 
+    - docker push hakpovi/spring-boot-backend:v1   
 
 run-docker-container:
   stage: test
