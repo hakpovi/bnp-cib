@@ -39,11 +39,11 @@ build-docker-image-&push:
     
   script:
     
-    - docker build -t spring-boot-app:v1 .  #   Build the Docker image
+    - docker build -t spring-boot-backend:v1 .  #   Build the Docker image
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD # CI_REGISTRY
-    - docker tag spring-boot-app:v1 spring-boot-app:v1 # Tag the Docker image
+    - docker tag spring-boot-backend:v1 spring-boot-backend:v1 # Tag the Docker image
     
-    - docker push hakpovi/bnp:v1
+    - docker push spring-boot-backend:v1
     
 
   artifacts:
