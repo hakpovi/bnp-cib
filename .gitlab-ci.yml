@@ -43,7 +43,7 @@ build-docker-image-&push:
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD # CI_REGISTRY
     - docker tag spring-boot-backend:v1 spring-boot-backend:v1 # Tag the Docker image
     
-    - docker push spring-boot-backend:v1
+    - docker push hakpovi/spring-boot-backend:v1
     
 
   artifacts:
