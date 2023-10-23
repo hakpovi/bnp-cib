@@ -1,0 +1,77 @@
+image: maven:3.8-jdk-11
+variables:
+  DOCKER_REGISTRY: "bnp"
+  DOCKER_USERNAME: "hakpovi"
+  DOCKER_PASSWORD: "dckr_pat_CtmbwZVUC4FPDWWgS6M86e-N0gI"
+
+services:
+  - docker:dind
+stages:
+  - build
+
+  - deploy
+  - test
+
+#variables:
+ # MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
+
+
+
+build-jar-file:
+  stage: build
+  script:
+    - mvn clean install 
+    - mvn package
+ 
+  artifacts:
+        paths:
+            -  target/*.jar
+
+
+
+build-docker-image-&push:
+  services:
+    - docker:dind
+  image: docker:dind
+  stage: build
+  dependencies: 
+    - build-jar-file
+    
+  script:
+    
+    - docker build -t spring-boot-app:v1 .  #   Build the Docker image
+    - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD # CI_REGISTRY
+    - docker tag spring-boot-app:v1 spring-boot-app:v1 # Tag the Docker image
+    
+    - docker push hakpovi/bnp:v1
+    
+
+  artifacts:
+      paths:
+      - spring-boot-app:v1
+
+
+
+deploy-docker-container:
+  stage: test
+  services:
+    - docker:dind
+  image: docker:dind
+  dependencies:
+    - build-docker-image
+  script:
+    - echo "Deploying the application"
+    - docker run  -d hakpovi/spring-boot-app:v1 
+    # Add your deployment scripts here (e.g., deploying to a server)
+  #only:
+   # - master
+  only: [] 
+
+
+deploy-docker-image:
+  stage: deploy
+  script:
+    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY  # Login to GitLab Container Registry
+    - docker tag my-app $CI_REGISTRY_IMAGE/my-app:$CI_COMMIT_REF_NAME  # Tag the Docker image
+    - docker push $CI_REGISTRY_IMAGE/my-app:$CI_COMMIT_REF_NAME  # Push the Docker image to GitLab Container Registry
+  only: []
