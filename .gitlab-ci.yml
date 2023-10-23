@@ -52,7 +52,7 @@ build-docker-image-&push:
 
 
 
-deploy-docker-container:
+run-docker-container:
   stage: test
   services:
     - docker:dind
@@ -62,16 +62,9 @@ deploy-docker-container:
   script:
     - echo "Deploying the application"
     - docker run  -d hakpovi/spring-boot-app:v1 
-    # Add your deployment scripts here (e.g., deploying to a server)
+    
   #only:
    # - master
-  only: [] 
+  #only: [] 
 
 
-deploy-docker-image:
-  stage: deploy
-  script:
-    - docker login -u $CI_REGISTRY_USER -p $CI_REGISTRY_PASSWORD $CI_REGISTRY  # Login to GitLab Container Registry
-    - docker tag my-app $CI_REGISTRY_IMAGE/my-app:$CI_COMMIT_REF_NAME  # Tag the Docker image
-    - docker push $CI_REGISTRY_IMAGE/my-app:$CI_COMMIT_REF_NAME  # Push the Docker image to GitLab Container Registry
-  only: []
