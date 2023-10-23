@@ -37,11 +37,11 @@ run-docker-container:
   stage: test
   services:
     - docker:dind
-  image: docker:dind
+  image: ubuntu:20-alpine
   dependencies:
     - build-docker-image-&push
   script:
-    - docker run -it --rm my-docker-dind-with-curl sh
+    - apt-get install curl -y
     - docker run  -d hakpovi/spring-boot-backend:v1
     - curl -vvv http://localhost:8090 > curl-result.txt
     - cat curl-result.txt
