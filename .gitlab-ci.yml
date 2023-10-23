@@ -12,11 +12,6 @@ stages:
   - deploy
   - test
 
-#variables:
- # MAVEN_OPTS: "-Dmaven.repo.local=.m2/repository"
-
-
-
 build-jar-file:
   stage: build
   script:
@@ -46,12 +41,6 @@ build-docker-image-&push:
     - docker push hakpovi/spring-boot-backend:v1
     
 
-  artifacts:
-      paths:
-      - spring-boot-app:v1
-
-
-
 run-docker-container:
   stage: test
   services:
@@ -61,7 +50,7 @@ run-docker-container:
     - build-docker-image-&push
   script:
     - echo "Deploying the application"
-    - docker run  -d hakpovi/spring-boot-app:v1 
+    - docker run  -d hakpovi/spring-boot-backend:v1 
     
   #only:
    # - master
