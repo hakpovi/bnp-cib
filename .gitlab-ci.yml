@@ -1,8 +1,4 @@
-image: maven:3.8-jdk-11
-variables:
-  POSTGRES-TAG= "cib"
-  BACKEND-TAG= "v1"
-  DOCKER-REPO= "hakpovi"
+image: "maven:3.8-jdk-11" 
 services:
   - docker:dind
 
@@ -27,6 +23,9 @@ build-docker-image-&push:
     - docker:dind
   image: docker:dind
   stage: build
+  variables:
+    BACKEND_TAG: "v1"
+    DOCKER_REPO: "hakpovi"
   dependencies: 
     - build-jar-file
     
@@ -34,18 +33,21 @@ build-docker-image-&push:
     
     - docker build -t spring-boot-backend:v1 .  
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD 
-    - docker tag spring-boot-backend:$BACKEND-TAG hakpovi/spring-boot-backend:$BACKEND-TAG 
-    - docker push hakpovi/spring-boot-backend:$BACKEND-TAG  
+    - docker tag spring-boot-backend:$BACKEND-TAG $DOCKER_REPO/spring-boot-backend:$BACKEND-TAG 
+    - docker push $DOCKER_REPO/spring-boot-backend:$BACKEND-TAG  
 
 run-docker-container:
   stage: test
   services:
     - docker:dind
   image: docker:dind
+  variables:
+    POSTGRES_TAG: "cib"
+    DOCKER_REPO: "hakpovi"
   dependencies:
     - build-docker-image-&push
   script:
-    - docker run  -d hakpovi/spring-boot-backend:v1
+    - docker run  -d $DOCKER_REPO/spring-boot-backend:v1
     #- curl -vvv http://localhost:8090 > curl-result.txt
     #- cat curl-result.txt
     
@@ -57,15 +59,18 @@ run-docker-container:
 build-deploy-database:
   stage: build-database
   image: docker:dind
+  variables:
+    DOCKER_REPO: "hakpovi"
+    POSTGRES_TAG: "cib"
   services:
     - docker:dind
 
   script:
     - cd database
     - docker build -t postgres-sql:$POSTGRES-TAG .
-    - docker tag postgres-sql:$POSTGRES-TAG $DOCKER-REPO/postgres-sql:$POSTGRES-TAG
+    - docker tag postgres-sql:$POSTGRES_TAG $DOCKER_REPO/postgres-sql:$POSTGRES_TAG
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
-    - docker push $DOCKER-REPO/postgres-sql:$POSTGRES-TAG
+    - docker push $DOCKER_REPO/postgres-sql:$POSTGRES_TAG
 
 
 
