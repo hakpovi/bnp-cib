@@ -3,13 +3,13 @@ services:
   - docker:dind
 
 stages:
-  - build
-  - deploy
-  - test
+  - build-backend
+  - deploy-backend
+  - test-backend
   - build-database
 
 build-jar-file:
-  stage: build
+  stage: build-backend
   script:
     - mvn clean install 
     - mvn package
@@ -18,11 +18,11 @@ build-jar-file:
         paths:
             -  target/*.jar
 
-build-docker-image-&push:
+build-backend-image-&push:
   services:
     - docker:dind
   image: docker:dind
-  stage: build
+  stage: build-backend
   variables:
     BACKEND_TAG: "v1"
     DOCKER_REPO: "hakpovi"
@@ -37,7 +37,7 @@ build-docker-image-&push:
     - docker push $DOCKER_REPO/spring-boot-backend:$BACKEND_TAG  
 
 run-docker-container:
-  stage: test
+  stage: test-backend
   services:
     - docker:dind
   image: docker:dind
