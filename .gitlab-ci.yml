@@ -45,7 +45,7 @@ run-docker-container:
     POSTGRES_TAG: "cib"
     DOCKER_REPO: "hakpovi"
   dependencies:
-    - build-docker-image-&push
+    - build-backend-image-&push
   script:
     - docker run  -d $DOCKER_REPO/spring-boot-backend:v1
     #- curl -vvv http://localhost:8090 > curl-result.txt
