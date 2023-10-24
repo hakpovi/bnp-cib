@@ -67,7 +67,7 @@ build-deploy-database:
 
   script:
     - cd database
-    - docker build -t postgres-sql:$POSTGRES-TAG .
+    - docker build -t postgres-sql:$POSTGRES_TAG .
     - docker tag postgres-sql:$POSTGRES_TAG $DOCKER_REPO/postgres-sql:$POSTGRES_TAG
     - docker login -u $DOCKER_USERNAME -p $DOCKER_PASSWORD
     - docker push $DOCKER_REPO/postgres-sql:$POSTGRES_TAG
